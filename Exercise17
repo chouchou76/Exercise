@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <title>Chester</title>
+    </head>
+    <body background="Anh/Diamonds.jpg">
+        <h1 align="center">Chester the Jester</h1>
+        <center><h3>Clown <span>•</span> Juggler <span>•</span> Magician</h3></center>
+        <center><img src="Anh/Chester.jpg" alt="Chester"></center>
+        <h3 align="center">Here him for your child's party today</h3>
+        <hr style="background-color: blue;height:2pt;width:420pt"/>
+        <ol type="I">
+            <li>Reasonable rates</li>
+            <li>60 minutes, 90 minute programs</li>
+            <li>Birthday surprises!</li>
+    </body>
+</html>
