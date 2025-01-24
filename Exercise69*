@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <title>XML - AJAX</title>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th {
+                background-color: blue;
+                color: white;
+            }
+            th, td {
+                padding: 5px;
+            }
+            select {
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="display: flex; gap: 10px; text-align: center;">
+            <p>Chọn Title:</p>
+            <select id="titleDropdown" onchange="filterEmployees()"></select>
+        </div>
+        <table id="employeeTable" style="display: none;">
+            <tr>
+                <th>Mã Employee</th>
+                <th>Tên Employee</th>
+                <th>Phone Employee</th>
+            </tr>
+        </table>
+        <script>
+            // Load the XML file and populate the dropdown
+            function loadDoc() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        populateDropdown(this);
+                    }
+                };
+                xhttp.open("GET", "employees.xml", true);
+                xhttp.send();
+            }
+
+            // Populate the dropdown with unique titles
+            function populateDropdown(xml) {
+                var xmlDoc = xml.responseXML;
+                var employees = xmlDoc.getElementsByTagName("employee");
+                var titles = new Set();
+
+                for (var i = 0; i < employees.length; i++) {
+                    titles.add(employees[i].getAttribute("title"));
+                }
+
+                var dropdown = document.getElementById("titleDropdown");
+                titles.forEach(function (title) {
+                    var option = document.createElement("option");
+                    option.value = title;
+                    option.textContent = title;
+                    dropdown.appendChild(option);
+                });
+            }
+
+            // Filter employees by the selected title and display them in a table
+            function filterEmployees() {
+                var selectedTitle = document.getElementById("titleDropdown").value;
+                if (!selectedTitle) {
+                    document.getElementById("employeeTable").style.display = "none";
+                    return;
+                }
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        displayEmployees(this, selectedTitle);
+                    }
+                };
+                xhttp.open("GET", "employees.xml", true);
+                xhttp.send();
+            }
+
+            // Display filtered employees in the table
+            function displayEmployees(xml, title) {
+                var xmlDoc = xml.responseXML;
+                var employees = xmlDoc.getElementsByTagName("employee");
+                var table = "<tr><th>Mã Employee</th><th>Tên Employee</th><th>Phone Employee</th></tr>";
+
+                for (var i = 0; i < employees.length; i++) {
+                    if (employees[i].getAttribute("title") === title) {
+                        var id = employees[i].getAttribute("id");
+                        var name = employees[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
+                        var phone = employees[i].getElementsByTagName("phone")[0].childNodes[0].nodeValue;
+
+                        table += "<tr><td>" + id + "</td><td>" + name + "</td><td>" + phone + "</td></tr>";
+                    }
+                }
+
+                var employeeTable = document.getElementById("employeeTable");
+                employeeTable.innerHTML = table;
+                employeeTable.style.display = "table";
+            }
+
+            // Call the loadDoc function when the page loads
+            window.onload = loadDoc;
+        </script>
+    </body>
+</html>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<employees>
+    <employee id="1" title="Architect">
+        <name>Đoàn Ái Nương</name>
+        <phone>0161652042</phone>
+    </employee>
+    <employee id="2" title="Engineer">
+        <name>Đoàn Chính Thuần</name>
+        <phone>0165655431</phone>
+    </employee>
+    <employee id="3" title="Teacher">
+        <name>Trần Chính Nghĩa</name>
+        <phone>0981245765</phone>
+    </employee>
+    <employee id="4" title="Architect">
+        <name>Châu Bá Thông</name>
+        <phone>0978976665</phone>
+    </employee>
+    <employee id="5" title="Engineer">
+        <name>Kiều Phong</name>
+        <phone>0901334556</phone>
+    </employee>
+</employees>
+
